@@ -40,26 +40,27 @@ def compress_image(img_array, F, d):
     :param d: frequency cutoff threshold
     :return: compressed image in array format
     """
-    h, w = img_array.shape
+    h, w, c = img_array.shape
     h_blocks = h // F
     w_blocks = w // F
 
-    compressed = np.zeros((h_blocks * F, w_blocks * F))
+    compressed = np.zeros((h_blocks * F, w_blocks * F, c))
 
-    for i in range(h_blocks):
-        for j in range(w_blocks):
-            block = img_array[i * F:(i + 1) * F, j * F:(j + 1) * F]
-            c = dct2(block)
+    for ch in range(c):
+        for i in range(h_blocks):
+            for j in range(w_blocks):
+                block = img_array[i * F:(i + 1) * F, j * F:(j + 1) * F, ch]
+                coeffs = dct2(block)
 
-            for k in range(F):
-                for l in range(F):
-                    if k + l >= d:
-                        c[k, l] = 0
+                for k in range(F):
+                    for l in range(F):
+                        if k + l >= d:
+                            coeffs[k, l] = 0
 
-            ff = idct2(c)
-            ff = np.round(ff)
-            ff = np.clip(ff, 0, 255)
-            compressed[i * F:(i + 1) * F, j * F:(j + 1) * F] = ff
+                restored = idct2(coeffs)
+                restored = np.round(restored)
+                restored = np.clip(restored, 0, 255)
+                compressed[i * F:(i + 1) * F, j * F:(j + 1) * F, ch] = restored
 
     return compressed.astype(np.uint8)
 
@@ -98,18 +99,26 @@ def open_image(path):
         print(f"Error opening the image: {e}")
 
 
-def dct2_compress(input_file, F, d, output_dir):
+def dct2_compress(input_file, F, d, output_dir, show_img=True):
     """
     Function to start the compression process
     :param input_file: path to the input image
     :param F: block dimension
     :param d: frequency cutoff threshold
     :param output_dir: folder to save the plot_benchmark to
+    :param show_img: to show an image comparison at the end of the script
     """
-    img = Image.open(input_file).convert('L')
+    img = Image.open(input_file)
     img_array = np.array(img)
 
-    compressed_img = compress_image(img_array, F, d)
+    if len(img_array.shape) == 2:
+        # Grayscale
+        #img_array = img_array.astype(np.uint8)
+        compressed_img = compress_image(np.expand_dims(img_array, axis=2), F, d)
+        compressed_img = compressed_img[:, :, 0]
+    else:
+        # Color
+        compressed_img = compress_image(img_array, F, d)
 
     img_name = os.path.splitext(os.path.basename(input_file))[0]
     compressed_img_name = f"{img_name}_compressed_F{F}_d{d}.bmp"
@@ -118,8 +127,9 @@ def dct2_compress(input_file, F, d, output_dir):
     output_path = os.path.join(output_dir, compressed_img_name)
     output_file = save_compressed_image(compressed_img, output_path)
 
-    open_image(input_file)
-    open_image(output_file)
+    if show_img:
+        open_image(input_file)
+        open_image(output_file)
 
 
 if __name__ == "__main__":

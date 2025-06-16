@@ -17,6 +17,7 @@ class DCT2App:
         self.output_folder = tk.StringVar(value=os.getcwd() + "\\output\\")
         self.F = tk.IntVar(value=8)
         self.d = tk.IntVar(value=10)
+        self.show_img = tk.BooleanVar(value=True)
 
         self.create_widgets()
 
@@ -48,6 +49,15 @@ class DCT2App:
         style.map(
             "TButton",
             background=[("active", "#45a049")]
+        )
+        style.configure(
+            "TCheckbutton",
+            background="#2e2e2e",
+            foreground="white")
+        style.map(
+            "TCheckbutton",
+            background=[("active", "#3e3e3e")],
+            foreground=[("active", "#ffffff")]
         )
 
         ttk.Label(self.root, text="Select a BMP image using the Browse button:").pack(pady=(10, 0))
@@ -81,7 +91,11 @@ class DCT2App:
                                  fg="white", troughcolor="#4caf50", highlightthickness=0)
         self.d_slider.pack(padx=20, fill="x")
 
-        ttk.Button(self.root, text="Confirm", command=self.submit).pack(pady=20)
+        confirm_frame = tk.Frame(self.root, bg="#2e2e2e")
+        confirm_frame.pack(pady=20)
+        ttk.Button(confirm_frame, text="Confirm", command=self.submit).pack(side="left", padx=10)
+        ttk.Checkbutton(confirm_frame, text="Show image at end", variable=self.show_img, style="TCheckbutton").pack(
+            side="left")
 
     def update_d_slider(self, val):
         f_val = int(val)
@@ -107,6 +121,7 @@ class DCT2App:
             d_value = self.d.get()
             file_path = self.file_path.get()
             output_folder = self.output_folder.get()
+            show_img = self.show_img.get()
 
             if not os.path.isfile(file_path):
                 raise ValueError("Invalid or no file selected.")
@@ -117,7 +132,7 @@ class DCT2App:
             if not (0 <= d_value <= 2 * f_value - 2):
                 raise ValueError(f"d must be between 0 and {2 * f_value - 2}.")
 
-            dct2_compress(file_path, f_value, d_value, output_folder)
+            dct2_compress(file_path, f_value, d_value, output_folder, show_img)
 
         except ValueError as e:
             messagebox.showerror("Error", str(e))
