@@ -1,7 +1,7 @@
 import numpy as np
 
 # Tolerance for correctness test
-TOLERANCE = 10.0
+TOLERANCE: float = 10.0
 
 # Input test matrix
 TEST_BLOCK = np.array([
@@ -27,6 +27,7 @@ EXPECTED_DCT2 = np.array([
     [1.97e+01, -7.81e+01, 9.72e-01, -7.23e+01, -2.15e+01, 8.13e+01, 6.37e+01, 5.90e+00]
 ])
 
+# Expected DCT1 result
 EXPECTED_DCT1D = np.array([401.0, 6.6, 109.0, -112.0, 65.4, 121.0, 116.0, 28.8])
 
 # Paths for saving results
