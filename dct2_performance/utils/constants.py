@@ -30,12 +30,7 @@ EXPECTED_DCT2 = np.array([
 EXPECTED_DCT1D = np.array([401.0, 6.6, 109.0, -112.0, 65.4, 121.0, 116.0, 28.8])
 
 # Paths for saving results
-PLOT_PATH = "dct2_performance/plot_benchmark/dct2_performance_comparison.png"
-BENCHMARK_PATH = "dct2_performance/benchmark/dct2_benchmark.csv"
+PLOT_PATH: str = "plot_benchmark/"
 
 # Number of iterations for benchmarks
-SEPARABLE_ITERATIONS = 10
-SCIPY_ITERATIONS = 100
-
-# Benchmark sizes
-BENCHMARK_SIZES = [8, 16, 32, 64, 128]
+ITERATIONS: int = 1

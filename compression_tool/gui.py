@@ -7,7 +7,14 @@ from main import dct2_compress
 
 
 class DCT2App:
+    """
+    A GUI application for DCT2 image compression using tkinter.
+    """
     def __init__(self, root):
+        """
+        DCT2App constructor
+        :param root: The root window of the application
+        """
         self.root = root
         self.root.title("DCT2 Image Compression Tool")
         self.root.geometry("500x500")
@@ -22,6 +29,9 @@ class DCT2App:
         self.create_widgets()
 
     def create_widgets(self):
+        """
+        Method to create the GUI widgets and layout.
+        """
         style = ttk.Style()
         style.theme_use('clam')
         style.configure(
@@ -98,6 +108,10 @@ class DCT2App:
             side="left")
 
     def update_d_slider(self, val):
+        """
+        Method to update the d slider based on the value of F.
+        :param val: The current value of the F slider
+        """
         f_val = int(val)
         max_d = 2 * f_val - 2
         self.d_slider.config(to=max_d)
@@ -105,17 +119,26 @@ class DCT2App:
             self.d.set(max_d)
 
     def browse_file(self):
+        """
+        Method to open a file dialog to select a BMP image file.
+        """
         filename = filedialog.askopenfilename(filetypes=[("BMP files", "*.bmp")])
         if filename:
             self.file_path.set(filename)
             self.file_label.config(text=os.path.basename(filename))
 
     def browse_output_folder(self):
+        """
+        Method to open a folder dialog to select the output folder.
+        """
         foldername = filedialog.askdirectory()
         if foldername:
             self.output_folder.set(foldername)
 
     def submit(self):
+        """
+        Method to validate inputs and call the dct2_compress function with the provided parameters.
+        """
         try:
             f_value = self.F.get()
             d_value = self.d.get()
