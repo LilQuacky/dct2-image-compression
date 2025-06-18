@@ -136,7 +136,7 @@ The compressed image is displayed alongside the original.
 ### Software Structure
 
 ```
-image_compression/
+compression_tool/
 ├── main.py         <- Image processing logic
 └── gui.py          <- Tkinter-based user interface
 ```

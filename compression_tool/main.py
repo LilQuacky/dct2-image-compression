@@ -3,7 +3,7 @@ import platform
 import subprocess
 import numpy as np
 
-from scipy.fftpack import dctn, idctn
+from scipy.fft import dctn, idctn
 from tkinter import filedialog, Tk
 from PIL import Image
 
